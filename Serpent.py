@@ -7,6 +7,7 @@ class Serpent(pygame.sprite.Sprite):
         super().__init__()
 
         self.screen = game.screen
+        self.screen_width, self.screen_height = pygame.display.get_surface().get_size()
 
         # Color of the snake
         self.green = (0, 255, 0)
@@ -18,7 +19,6 @@ class Serpent(pygame.sprite.Sprite):
         # Fetch the rectangle object that has the dimensions of the image
         self.rect = self.image.get_rect()
 
-        self.rect.x = self.rect.width
-        self.rect.y = self.rect.height
+        self.rect.center = (self.screen_width / 2, self.screen_height / 2)
 
         self.screen.blit(self.image, self.rect)
