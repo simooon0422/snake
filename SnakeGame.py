@@ -1,4 +1,5 @@
 import pygame
+import Serpent
 
 
 class SnakeGame:
@@ -7,6 +8,7 @@ class SnakeGame:
         """Initialize the game"""
         pygame.init()
         self.screen = pygame.display.set_mode((500, 500))
+        self.snake = Serpent.Serpent(self)
 
     def run_game(self):
         """Main game loop"""
