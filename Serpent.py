@@ -3,11 +3,11 @@ import pygame
 
 class Serpent(pygame.sprite.Sprite):
     """Class for the snake character"""
-    def __init__(self, game):
+    def __init__(self, screen):
         """Initialize snake sprite in the game"""
         super().__init__()
 
-        self.screen = game.screen
+        self.screen = screen
         self.screen_width, self.screen_height = pygame.display.get_surface().get_size()
 
         # Color of the snake

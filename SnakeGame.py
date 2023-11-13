@@ -9,7 +9,7 @@ class SnakeGame:
         """Initialize the game"""
         pygame.init()
         self.screen = pygame.display.set_mode((500, 500))
-        self.snake = Serpent.Serpent(self)
+        self.snake = Serpent.Serpent(self.screen)
         self.direction = "stop"
 
     def run_game(self):
