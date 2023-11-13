@@ -1,5 +1,6 @@
 import pygame
 import Serpent
+import time
 
 
 class SnakeGame:
@@ -17,6 +18,8 @@ class SnakeGame:
             pygame.display.flip()
             self.snake.update(self.direction)
             self._handle_events()
+
+            time.sleep(0.01)  # delay for snake's movement
 
     def _handle_events(self):
         """Function to handle pressing keys"""

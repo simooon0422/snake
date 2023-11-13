@@ -28,7 +28,7 @@ class Serpent(pygame.sprite.Sprite):
         self.speed = 5
 
         # Direction of moving
-        self.directions = {"left": (-1, 0), "right": (0, 1), "down": (0, 1), "up": (0, -100), "stop": (0, 0)}
+        self.directions = {"left": (-1, 0), "right": (1, 0), "down": (0, 1), "up": (0, -1), "stop": (0, 0)}
 
         # Display snake
         self.screen.blit(self.image, self.rect)
@@ -37,9 +37,7 @@ class Serpent(pygame.sprite.Sprite):
 
     def update(self, command):
         """Update position of the snake"""
-        print(self.rect.center)
-        self.rect.x = self.rect.x + self.directions[command][0]
-        self.rect.y = self.rect.y + self.directions[command][1]
-        print(self.rect.center)
+        self.rect.move_ip(self.directions[command])
         self.screen.fill((0, 0, 0))
         self.screen.blit(self.image, self.rect)
+
