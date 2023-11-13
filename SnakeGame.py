@@ -16,7 +16,7 @@ class SnakeGame:
         """Main game loop"""
         while True:
             pygame.display.flip()
-            self.snake.update(self.direction)
+            self.snake.update_body(self.direction)
             self._handle_events()
 
             time.sleep(0.01)  # delay for snake's movement
