@@ -42,12 +42,11 @@ class Serpent:
 
     def _create_body(self):
         """Create initial body of the snake"""
-
         # Fill list with body objects
         for i in range(self.initial_length):
             self.body.append(BodyModule.BodyModule(self.screen, self.size))
 
-        # Set position of the rest of the starting body objects
+        # Set position of the starting body objects
         for i in range(len(self.body)):
             if i == 0:
                 # Set position of the first body part (head)
@@ -96,3 +95,14 @@ class Serpent:
             return "up"
         else:
             return "no direction"
+
+    def grow(self):
+        """Increase length of snake by 1 module"""
+        self.body.append(BodyModule.BodyModule(self.screen, self.size))
+        self.offsets.append((0, 0))
+        self.body[len(self.body) - 1].rect.x = self.body[len(self.body) - 2].rect.x
+        self.body[len(self.body) - 1].rect.y = self.body[len(self.body) - 2].rect.y + self.size[1]
+
+        for i in range(len(self.body)):
+            print([self.body[i].rect.x, self.body[i].rect.y])
+

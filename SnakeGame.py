@@ -2,6 +2,7 @@ import pygame
 import Serpent
 import Fruit
 import time
+import random
 
 
 class SnakeGame:
@@ -15,6 +16,7 @@ class SnakeGame:
         self.direction = "stop"
 
         self.fruits_list = []
+        self.fruits_position = []
 
     def run_game(self):
         """Main game loop"""
@@ -46,13 +48,17 @@ class SnakeGame:
         """Function for displaying fruits for snake on the screen"""
         if not self.fruits_list:
             self.fruits_list.append(Fruit.Fruit(self.screen))
+            self.fruits_position.append((random.randrange(200, 400, 10), random.randrange(200, 400, 10)))
         else:
-            self.fruits_list[0].update(100, 300)
+            self.fruits_list[0].update(self.fruits_position[0][0], self.fruits_position[0][1])
 
     def _handle_collisions(self):
         """Function specifying action after collision of objects"""
-        for i in range(len(self.snake.body)):
-            if pygame.Rect.colliderect(self.snake.body[i].rect, self.fruits_list[0].rect):
+        for i in range(len(self.fruits_list)):
+            if pygame.Rect.colliderect(self.snake.body[0].rect, self.fruits_list[0].rect):
+                del self.fruits_list[i]
+                self.fruits_position.pop(i)
+                self.snake.grow()
                 print("Eat apple")
 
         for i in range(1, len(self.snake.body)):
