@@ -27,9 +27,6 @@ class Serpent:
         # Store offsets to new positions
         self.offsets = [(0, 0)] * self.initial_length
 
-        # Speed of snake
-        self.speed = 5
-
         # Directions of moving
         self.directions = {"left": (-self.size[0], 0),
                            "right": (self.size[0], 0),
