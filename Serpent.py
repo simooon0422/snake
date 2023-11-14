@@ -30,12 +30,15 @@ class Serpent:
         # Speed of snake
         self.speed = 5
 
-        # Direction of moving
+        # Directions of moving
         self.directions = {"left": (-self.size[0], 0),
                            "right": (self.size[0], 0),
                            "down": (0, self.size[1]),
                            "up": (0, -self.size[1]),
                            "stop": (0, 0)}
+
+        # Store current direction
+        self.current_direction = "stop"
 
         # Create initial body
         self._create_body()
@@ -63,8 +66,11 @@ class Serpent:
     def update_body(self, command):
         """Update position of the snake's body modules"""
         if command != "stop":
+            if command != self._opposite_direction(self.current_direction):
+                self.current_direction = command
+
             self.screen.fill(self.black)
-            self._set_offsets(command)
+            self._set_offsets(self.current_direction)
             self._update_positions()
 
     def _set_offsets(self, command):
@@ -77,6 +83,19 @@ class Serpent:
                                    self.body[i - 1].rect.y - self.body[i].rect.y)
 
     def _update_positions(self):
-        """Update and display positions of body modules"""
+        """Move and display body modules"""
         for i in range(len(self.body)):
             self.body[i].update(self.offsets[i])
+
+    def _opposite_direction(self, direction):
+        """Return direction opposite to the current direction"""
+        if direction == "left":
+            return "right"
+        elif direction == "right":
+            return "left"
+        elif direction == "up":
+            return "down"
+        elif direction == "down":
+            return "up"
+        else:
+            return "no direction"
