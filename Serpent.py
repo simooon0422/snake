@@ -37,6 +37,7 @@ class Serpent:
                            "up": (0, -self.size[1]),
                            "stop": (0, 0)}
 
+        # Create initial body
         self._create_body()
 
     def _create_body(self):
@@ -63,16 +64,19 @@ class Serpent:
         """Update position of the snake's body modules"""
         if command != "stop":
             self.screen.fill(self.black)
+            self._set_offsets(command)
+            self._update_positions()
 
-            # Set offsets for body modules
-            for i in range(len(self.body)):
-                if i == 0:
-                    self.offsets[i] = self.directions[command]
-                else:
-                    self.offsets[i] = (self.body[i-1].rect.x - self.body[i].rect.x,
-                                       self.body[i-1].rect.y - self.body[i].rect.y)
+    def _set_offsets(self, command):
+        """Set offsets for body modules"""
+        for i in range(len(self.body)):
+            if i == 0:
+                self.offsets[i] = self.directions[command]
+            else:
+                self.offsets[i] = (self.body[i - 1].rect.x - self.body[i].rect.x,
+                                   self.body[i - 1].rect.y - self.body[i].rect.y)
 
-            # Update and display position of body modules
-            for i in range(len(self.body)):
-                self.body[i].rect.move_ip(self.offsets[i])
-                self.screen.blit(self.body[i].image, self.body[i].rect)
+    def _update_positions(self):
+        """Update and display positions of body modules"""
+        for i in range(len(self.body)):
+            self.body[i].update(self.offsets[i])
