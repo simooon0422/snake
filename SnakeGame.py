@@ -19,7 +19,7 @@ class SnakeGame:
             self.snake.update_body(self.direction)
             self._handle_events()
 
-            time.sleep(0.01)  # delay for snake's movement
+            time.sleep(0.1)  # delay for snake's movement
 
     def _handle_events(self):
         """Function to handle pressing keys"""
