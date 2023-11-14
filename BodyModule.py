@@ -3,17 +3,20 @@ import pygame
 
 class BodyModule(pygame.sprite.Sprite):
     """Class for creating body of the snake in parts"""
-    def __init__(self, screen):
+    def __init__(self, screen, size):
         super().__init__()
 
         # Pygame display screen
         self.screen = screen
 
+        # Size of body module
+        self.size = size
+
         # Color of the body
         self.green = (0, 255, 0)
 
         # Create an image of the body module and fill it with a color.
-        self.image = pygame.Surface([10, 10])
+        self.image = pygame.Surface(self.size)
         self.image.fill(self.green)
 
         # Fetch the rectangle object that has the dimensions of the image

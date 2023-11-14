@@ -18,6 +18,9 @@ class Serpent:
         # Initial length of snake (in modules)
         self.initial_length = 3
 
+        # Size of one body module
+        self.size = [10, 10]
+
         # Store objects forming snake's body
         self.body = []
 
@@ -28,7 +31,11 @@ class Serpent:
         self.speed = 5
 
         # Direction of moving
-        self.directions = {"left": (-10, 0), "right": (10, 0), "down": (0, 10), "up": (0, -10), "stop": (0, 0)}
+        self.directions = {"left": (-self.size[0], 0),
+                           "right": (self.size[0], 0),
+                           "down": (0, self.size[1]),
+                           "up": (0, -self.size[1]),
+                           "stop": (0, 0)}
 
         self._create_body()
 
@@ -37,7 +44,7 @@ class Serpent:
 
         # Fill list with body objects
         for i in range(self.initial_length):
-            self.body.append(BodyModule.BodyModule(self.screen))
+            self.body.append(BodyModule.BodyModule(self.screen, self.size))
 
         # Set position of the rest of the starting body objects
         for i in range(len(self.body)):
@@ -65,7 +72,7 @@ class Serpent:
                     self.offsets[i] = (self.body[i-1].rect.x - self.body[i].rect.x,
                                        self.body[i-1].rect.y - self.body[i].rect.y)
 
-            # Update position of body modules
+            # Update and display position of body modules
             for i in range(len(self.body)):
                 self.body[i].rect.move_ip(self.offsets[i])
                 self.screen.blit(self.body[i].image, self.body[i].rect)
