@@ -22,6 +22,7 @@ class SnakeGame:
             pygame.display.flip()
             self.snake.update_body(self.direction)
             self._handle_fruits()
+            self._handle_collisions()
             self._handle_events()
 
             time.sleep(0.1)  # delay for snake's movement
@@ -42,7 +43,18 @@ class SnakeGame:
                     self.direction = "down"
 
     def _handle_fruits(self):
+        """Function for displaying fruits for snake on the screen"""
         if not self.fruits_list:
             self.fruits_list.append(Fruit.Fruit(self.screen))
         else:
             self.fruits_list[0].update(100, 300)
+
+    def _handle_collisions(self):
+        """Function specifying action after collision of objects"""
+        for i in range(len(self.snake.body)):
+            if pygame.Rect.colliderect(self.snake.body[i].rect, self.fruits_list[0].rect):
+                print("Eat apple")
+
+        for i in range(1, len(self.snake.body)):
+            if pygame.Rect.colliderect(self.snake.body[0].rect, self.snake.body[i].rect):
+                print("Game Over")

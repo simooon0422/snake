@@ -55,7 +55,7 @@ class Serpent:
                 self.body[0].rect.y = self.screen_height / 2
             else:
                 self.body[i].rect.x = self.body[i-1].rect.x
-                self.body[i].rect.y = self.body[i-1].rect.y + 10
+                self.body[i].rect.y = self.body[i-1].rect.y + self.size[1]
 
             # Display initial body
             self.screen.blit(self.body[i].image, self.body[i].rect)
