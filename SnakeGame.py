@@ -21,8 +21,13 @@ class SnakeGame:
 
         self.running_state = 0
 
+        # Create button objects used in menus
         self.play_button = Button.Button(self.screen, "Play", 100, 50, 200, 150)
-        self.quit_button = Button.Button(self.screen, "Quit", 100, 50, 200, 250)
+        self.quit_button = Button.Button(self.screen, "Quit", 100, 50, 200, 350)
+        self.game_over_label = Button.Button(self.screen, "Game Over", 100, 50, 200, 150)
+        self.restart_button = Button.Button(self.screen, "Restart", 100, 50, 200, 250)
+        self.pause_label = Button.Button(self.screen, "Pause", 100, 50, 200, 250)
+        self.resume_button = Button.Button(self.screen, "Resume", 100, 50, 200, 150)
 
     def run_game(self):
         """Main game loop"""
@@ -30,16 +35,18 @@ class SnakeGame:
             self._handle_events()
             pygame.display.flip()
             if self.running_state == 0:
-                self._display_menu()
+                self._display_menu("main")
             elif self.running_state == 1:
                 self.snake.update_body(self.direction)
                 self._handle_fruits()
                 self._handle_collisions()
+            elif self.running_state == -1:
+                self._display_menu("game over")
 
             time.sleep(0.1)  # delay for snake's movement
 
     def _handle_events(self):
-        """Function to handle pressing keys"""
+        """Function to handle pressing keys and clicking"""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -53,7 +60,7 @@ class SnakeGame:
                 elif event.key == pygame.K_DOWN:
                     self.direction = "down"
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                self._main_menu_clicks(pygame.mouse.get_pos())
+                self._menu_clicks(pygame.mouse.get_pos())
 
     def _handle_fruits(self):
         """Function for displaying fruits for snake on the screen"""
@@ -99,17 +106,42 @@ class SnakeGame:
         else:
             return False
 
-    def _display_menu(self):
+    def _display_menu(self, menu_type):
         """Function displaying main menu of the game"""
-        self.play_button.draw_button()
-        self.quit_button.draw_button()
+        if menu_type == "main":
+            self.play_button.draw_button()
+            self.quit_button.draw_button()
+        elif menu_type == "game over":
+            self.game_over_label.draw_button()
+            self.restart_button.draw_button()
+            self.quit_button.draw_button()
 
-    def _main_menu_clicks(self, mouse_pos):
+    def _menu_clicks(self, mouse_pos):
         if self.running_state == 0:
             if self.play_button.rect.collidepoint(mouse_pos):
-                self.running_state = 1
-                self.screen.fill((0, 0, 0))
-                self.snake.create_body()
-
+                self._start()
             elif self.quit_button.rect.collidepoint(mouse_pos):
                 pygame.quit()
+
+        elif self.running_state == -1:
+            if self.restart_button.rect.collidepoint(mouse_pos):
+                self._restart()
+            elif self.quit_button.rect.collidepoint(mouse_pos):
+                pygame.quit()
+
+    def _start(self):
+        """Creates the snake and starts the game"""
+        self.running_state = 1
+        self.screen.fill((0, 0, 0))
+        self.snake.create_body()
+
+    def _restart(self):
+        """Deletes current snake and fruits and creates them once again"""
+        del self.snake
+        del self.fruits_list[0]
+        self.fruits_position.pop(0)
+        self.running_state = 1
+        self.screen.fill((0, 0, 0))
+        self.snake = Serpent.Serpent(self.screen)
+        self.direction = "stop"
+        self.snake.create_body()
