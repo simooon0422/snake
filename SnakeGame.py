@@ -1,6 +1,7 @@
 import pygame
 import Serpent
 import Fruit
+import Button
 import time
 import random
 
@@ -18,18 +19,23 @@ class SnakeGame:
         self.fruits_list = []
         self.fruits_position = []
 
-        self.is_running = True
+        self.running_state = 0
+
+        self.play_button = Button.Button(self.screen, "Play", 100, 50, 200, 150)
+        self.quit_button = Button.Button(self.screen, "Quit", 100, 50, 200, 250)
 
     def run_game(self):
         """Main game loop"""
         while True:
+            self._handle_events()
             pygame.display.flip()
-            if self.is_running:
+            if self.running_state == 0:
+                self._display_menu()
+            elif self.running_state == 1:
                 self.snake.update_body(self.direction)
                 self._handle_fruits()
                 self._handle_collisions()
 
-            self._handle_events()
             time.sleep(0.1)  # delay for snake's movement
 
     def _handle_events(self):
@@ -46,6 +52,8 @@ class SnakeGame:
                     self.direction = "up"
                 elif event.key == pygame.K_DOWN:
                     self.direction = "down"
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                self._main_menu_clicks(pygame.mouse.get_pos())
 
     def _handle_fruits(self):
         """Function for displaying fruits for snake on the screen"""
@@ -76,7 +84,7 @@ class SnakeGame:
     def _check_game_over_collisions(self):
         """Function handling collisions causing game over"""
         if self._is_game_over():
-            self.is_running = False
+            self.running_state = -1
             print("Game Over")
 
     def _is_game_over(self):
@@ -90,3 +98,18 @@ class SnakeGame:
             return True
         else:
             return False
+
+    def _display_menu(self):
+        """Function displaying main menu of the game"""
+        self.play_button.draw_button()
+        self.quit_button.draw_button()
+
+    def _main_menu_clicks(self, mouse_pos):
+        if self.running_state == 0:
+            if self.play_button.rect.collidepoint(mouse_pos):
+                self.running_state = 1
+                self.screen.fill((0, 0, 0))
+                self.snake.create_body()
+
+            elif self.quit_button.rect.collidepoint(mouse_pos):
+                pygame.quit()

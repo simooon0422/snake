@@ -38,13 +38,13 @@ class Serpent:
         self.current_direction = "stop"
 
         # Create initial body
-        self._create_body()
+        # self._create_body()
 
         # Store current and previous last body module's coordinates
-        self.last_module_x = [self.body[-1].rect.x, 0]
-        self.last_module_y = [self.body[-1].rect.y, 0]
+        self.last_module_x = [0, 0]
+        self.last_module_y = [0, 0]
 
-    def _create_body(self):
+    def create_body(self):
         """Create initial body of the snake"""
         # Fill list with body objects
         for i in range(self.initial_length):
@@ -62,6 +62,9 @@ class Serpent:
 
             # Display initial body
             self.screen.blit(self.body[i].image, self.body[i].rect)
+
+        self.last_module_x = [self.body[-1].rect.x, 0]
+        self.last_module_y = [self.body[-1].rect.y, 0]
 
     def update_body(self, command):
         """Update position of the snake's body modules"""

@@ -3,20 +3,21 @@ import pygame.font
 
 class Button:
 
-    def __init__(self, screen, msg):
+    def __init__(self, screen, msg, width, height, x_pos, y_pos):
         """Initialization of button's attributes"""
         self.screen = screen
         self.screen_rect = self.screen.get_rect()
 
         # Size and properties of the button
-        self.width, self.height = 200, 50
+        self.width, self.height = width, height
         self.button_color = (0, 255, 0)
         self.text_color = (255, 255, 255)
         self.font = pygame.font.SysFont(None, 48)
 
         # Create rectangle of the button and center it
         self.rect = pygame.Rect(0, 0, self.width, self.height)
-        self.rect.center = self.screen_rect.center
+        self.rect.x = x_pos
+        self.rect.y = y_pos
 
         # Button's text
         self._prep_msg(msg)
