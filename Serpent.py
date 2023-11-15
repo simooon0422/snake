@@ -40,6 +40,10 @@ class Serpent:
         # Create initial body
         self._create_body()
 
+        # Store current and previous last body module's coordinates
+        self.last_module_x = [self.body[-1].rect.x, 0]
+        self.last_module_y = [self.body[-1].rect.y, 0]
+
     def _create_body(self):
         """Create initial body of the snake"""
         # Fill list with body objects
@@ -68,6 +72,10 @@ class Serpent:
             self.screen.fill(self.black)
             self._set_offsets(self.current_direction)
             self._update_positions()
+            self.last_module_x[1] = self.last_module_x[0]
+            self.last_module_y[1] = self.last_module_y[0]
+            self.last_module_x[0] = self.body[-1].rect.x
+            self.last_module_y[0] = self.body[-1].rect.y
 
     def _set_offsets(self, command):
         """Set offsets for body modules"""
@@ -105,4 +113,18 @@ class Serpent:
 
         for i in range(len(self.body)):
             print([self.body[i].rect.x, self.body[i].rect.y])
+            print(self.body[i].rect.center)
 
+    def _get_grow_direction(self):
+        """Function for specifying snake grow directions"""
+        x = self.last_module_x[0] - self.last_module_x[1]
+        y = self.last_module_y[0] - self.last_module_y[1]
+
+        if x == 0 and y < 0:
+            return self.directions["down"]
+        elif x == 0 and y > 0:
+            return self.directions["up"]
+        elif x < 0 and y == 0:
+            return self.directions["left"]
+        elif x > 0 and y == 0:
+            return self.directions["right"]
