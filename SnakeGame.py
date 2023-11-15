@@ -18,15 +18,18 @@ class SnakeGame:
         self.fruits_list = []
         self.fruits_position = []
 
+        self.is_running = True
+
     def run_game(self):
         """Main game loop"""
         while True:
             pygame.display.flip()
-            self.snake.update_body(self.direction)
-            self._handle_fruits()
-            self._handle_collisions()
-            self._handle_events()
+            if self.is_running:
+                self.snake.update_body(self.direction)
+                self._handle_fruits()
+                self._handle_collisions()
 
+            self._handle_events()
             time.sleep(0.1)  # delay for snake's movement
 
     def _handle_events(self):
@@ -54,6 +57,11 @@ class SnakeGame:
 
     def _handle_collisions(self):
         """Function specifying action after collision of objects"""
+        self._check_fruits_collisions()
+        self._check_game_over_collisions()
+
+    def _check_fruits_collisions(self):
+        """Function handling collisions with fruits"""
         for i in range(len(self.fruits_list)):
             if pygame.Rect.colliderect(self.snake.body[0].rect, self.fruits_list[0].rect):
                 del self.fruits_list[i]
@@ -65,6 +73,20 @@ class SnakeGame:
                 self.snake.grow()
                 print("Eat apple")
 
+    def _check_game_over_collisions(self):
+        """Function handling collisions causing game over"""
+        if self._is_game_over():
+            self.is_running = False
+            print("Game Over")
+
+    def _is_game_over(self):
+        """Function checking game over conditions"""
         for i in range(1, len(self.snake.body)):
             if pygame.Rect.colliderect(self.snake.body[0].rect, self.snake.body[i].rect):
-                print("Game Over")
+                return True
+        if self.snake.body[0].rect.x > 500 - self.snake.size[0] or self.snake.body[0].rect.x < 0:
+            return True
+        elif self.snake.body[0].rect.y > 500 - self.snake.size[1] or self.snake.body[0].rect.y < 0:
+            return True
+        else:
+            return False
