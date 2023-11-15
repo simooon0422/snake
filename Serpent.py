@@ -66,7 +66,7 @@ class Serpent:
     def update_body(self, command):
         """Update position of the snake's body modules"""
         if command != "stop":
-            if command != self._opposite_direction(self.current_direction):
+            if command != self._get_opposite_direction(self.current_direction):
                 self.current_direction = command
 
             self.screen.fill(self.black)
@@ -91,7 +91,7 @@ class Serpent:
         for i in range(len(self.body)):
             self.body[i].update(self.offsets[i])
 
-    def _opposite_direction(self, direction):
+    def _get_opposite_direction(self, direction):
         """Return direction opposite to the current direction"""
         if direction == "left":
             return "right"
@@ -106,14 +106,12 @@ class Serpent:
 
     def grow(self):
         """Increase length of snake by 1 module"""
+        grow_direction = self._get_grow_direction()
         self.body.append(BodyModule.BodyModule(self.screen, self.size))
         self.offsets.append((0, 0))
-        self.body[len(self.body) - 1].rect.x = self.body[len(self.body) - 2].rect.x
-        self.body[len(self.body) - 1].rect.y = self.body[len(self.body) - 2].rect.y + self.size[1]
 
-        for i in range(len(self.body)):
-            print([self.body[i].rect.x, self.body[i].rect.y])
-            print(self.body[i].rect.center)
+        self.body[-1].rect.x = self.body[-2].rect.x + grow_direction[0]
+        self.body[-1].rect.y = self.body[-2].rect.y + grow_direction[1]
 
     def _get_grow_direction(self):
         """Function for specifying snake grow directions"""
@@ -125,6 +123,6 @@ class Serpent:
         elif x == 0 and y > 0:
             return self.directions["up"]
         elif x < 0 and y == 0:
-            return self.directions["left"]
-        elif x > 0 and y == 0:
             return self.directions["right"]
+        elif x > 0 and y == 0:
+            return self.directions["left"]

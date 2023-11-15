@@ -59,6 +59,10 @@ class SnakeGame:
                 del self.fruits_list[i]
                 self.fruits_position.pop(i)
                 self.snake.grow()
+                self.snake.grow()
+                self.snake.grow()
+                self.snake.grow()
+                self.snake.grow()
                 print("Eat apple")
 
         for i in range(1, len(self.snake.body)):
