@@ -72,10 +72,7 @@ class Serpent:
             self.screen.fill(self.black)
             self._set_offsets(self.current_direction)
             self._update_positions()
-            self.last_module_x[1] = self.last_module_x[0]
-            self.last_module_y[1] = self.last_module_y[0]
-            self.last_module_x[0] = self.body[-1].rect.x
-            self.last_module_y[0] = self.body[-1].rect.y
+            self._update_last_module_position()
 
     def _set_offsets(self, command):
         """Set offsets for body modules"""
@@ -90,6 +87,12 @@ class Serpent:
         """Move and display body modules"""
         for i in range(len(self.body)):
             self.body[i].update(self.offsets[i])
+
+    def _update_last_module_position(self):
+        self.last_module_x[1] = self.last_module_x[0]
+        self.last_module_y[1] = self.last_module_y[0]
+        self.last_module_x[0] = self.body[-1].rect.x
+        self.last_module_y[0] = self.body[-1].rect.y
 
     def _get_opposite_direction(self, direction):
         """Return direction opposite to the current direction"""
