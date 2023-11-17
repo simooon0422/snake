@@ -3,7 +3,6 @@ import Serpent
 import Fruit
 import Button
 import time
-import random
 
 
 class SnakeGame:
@@ -19,7 +18,6 @@ class SnakeGame:
         self.direction = "stop"
 
         self.fruits_list = []
-        self.fruits_position = []
 
         self.running_state = 1
 
@@ -80,9 +78,9 @@ class SnakeGame:
         """Function for displaying fruits for snake on the screen"""
         if not self.fruits_list:
             self.fruits_list.append(Fruit.Fruit(self.screen))
-            self.fruits_position.append((random.randrange(200, 400, 10), random.randrange(200, 400, 10)))
         else:
-            self.fruits_list[0].update(self.fruits_position[0][0], self.fruits_position[0][1])
+            for i in range(len(self.fruits_list)):
+                self.fruits_list[i].update()
 
     def _handle_collisions(self):
         """Function specifying action after collision of objects"""
@@ -94,7 +92,6 @@ class SnakeGame:
         index = self._check_fruits_collisions()
         if index != -1:
             del self.fruits_list[index]
-            self.fruits_position.pop(index)
             self.snake.grow()
             self.snake.grow()
             self.snake.grow()
@@ -173,7 +170,6 @@ class SnakeGame:
         """Deletes current snake and fruits and creates them once again"""
         del self.snake
         del self.fruits_list[0]
-        self.fruits_position.pop(0)
         self.snake = Serpent.Serpent(self.screen)
         self.direction = "stop"
         self._start()
