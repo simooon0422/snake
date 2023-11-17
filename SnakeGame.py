@@ -24,12 +24,12 @@ class SnakeGame:
         self.running_state = 1
 
         # Create button objects used in menus
-        self.play_button = Button.Button(self.screen, "Play", 100, 50, 200, 150)
-        self.quit_button = Button.Button(self.screen, "Quit", 100, 50, 200, 350)
-        self.game_over_label = Button.Button(self.screen, "Game Over", 100, 50, 200, 150)
-        self.restart_button = Button.Button(self.screen, "Restart", 100, 50, 200, 250)
-        self.pause_label = Button.Button(self.screen, "Pause", 100, 50, 200, 100)
-        self.resume_button = Button.Button(self.screen, "Resume", 100, 50, 200, 150)
+        self.play_button = Button.Button(self.screen, "Play", 100, 50)
+        self.quit_button = Button.Button(self.screen, "Quit", 100, 50)
+        self.game_over_label = Button.Button(self.screen, "Game Over", 100, 50)
+        self.restart_button = Button.Button(self.screen, "Restart", 100, 50)
+        self.pause_label = Button.Button(self.screen, "Pause", 100, 50)
+        self.resume_button = Button.Button(self.screen, "Resume", 100, 50)
 
     def run_game(self):
         """Main game loop, Running states of the game:
@@ -69,7 +69,7 @@ class SnakeGame:
                     self.running_state = 3
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if self.running_state != 0:
-                    self._menu_clicks(pygame.mouse.get_pos())
+                    self._menu_clicks(event)
 
     def _run(self):
         self.snake.update_body(self.direction)
@@ -126,41 +126,39 @@ class SnakeGame:
             return False
 
     def _display_menu(self, menu_type):
-        """Function displaying main menu of the game"""
+        """Displays menus of the game"""
+        self._hide_buttons()
         if menu_type == "main":
-            self.play_button.draw_button()
-            self.quit_button.draw_button()
+            self.play_button.draw_button(200, 150)
         elif menu_type == "game over":
-            self.game_over_label.draw_button()
-            self.restart_button.draw_button()
-            self.quit_button.draw_button()
+            self.game_over_label.draw_button(200, 150)
+            self.restart_button.draw_button(200, 250)
         elif menu_type == "pause":
-            self.pause_label.draw_button()
-            self.resume_button.draw_button()
-            self.restart_button.draw_button()
-            self.quit_button.draw_button()
+            self.pause_label.draw_button(200, 100)
+            self.resume_button.draw_button(200, 150)
+            self.restart_button.draw_button(200, 250)
 
-    def _menu_clicks(self, mouse_pos):
+        self.quit_button.draw_button(200, 350)
+
+    def _hide_buttons(self):
+        """Hide buttons outside the screen to prevent overlapping on menu change"""
+        hide_x = -500
+        hide_y = -500
+        self.play_button.draw_button(hide_x, hide_y)
+        self.restart_button.draw_button(hide_x, hide_y)
+        self.resume_button.draw_button(hide_x, hide_y)
+        self.quit_button.draw_button(hide_x, hide_y)
+
+    def _menu_clicks(self, event):
         """Handle clicking on menu buttons"""
-        if self.running_state == 1:
-            if self.play_button.rect.collidepoint(mouse_pos):
-                self._start()
-            elif self.quit_button.rect.collidepoint(mouse_pos):
-                pygame.quit()
-
-        elif self.running_state == 2:
-            if self.restart_button.rect.collidepoint(mouse_pos):
-                self._restart()
-            elif self.quit_button.rect.collidepoint(mouse_pos):
-                pygame.quit()
-
-        elif self.running_state == 3:
-            if self.restart_button.rect.collidepoint(mouse_pos):
-                self._restart()
-            elif self.resume_button.rect.collidepoint(mouse_pos):
-                self._resume()
-            elif self.quit_button.rect.collidepoint(mouse_pos):
-                pygame.quit()
+        if self.play_button.is_clicked(event) and self.running_state == 1:
+            self._start()
+        elif self.resume_button.is_clicked(event) and self.running_state == 3:
+            self._resume()
+        elif self.restart_button.is_clicked(event) and (self.running_state == 2 or self.running_state == 3):
+            self._restart()
+        elif self.quit_button.is_clicked(event):
+            pygame.quit()
 
     def _start(self):
         """Creates the snake and starts the game"""

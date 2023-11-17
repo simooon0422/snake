@@ -3,7 +3,7 @@ import pygame.font
 
 class Button:
 
-    def __init__(self, screen, msg, width, height, x_pos, y_pos):
+    def __init__(self, screen, msg, width, height):
         """Initialization of button's attributes"""
         self.screen = screen
         self.screen_rect = self.screen.get_rect()
@@ -16,8 +16,6 @@ class Button:
 
         # Create rectangle of the button and center it
         self.rect = pygame.Rect(0, 0, self.width, self.height)
-        self.rect.x = x_pos
-        self.rect.y = y_pos
 
         # Button's text
         self._prep_msg(msg)
@@ -28,7 +26,17 @@ class Button:
         self.msg_image_rect = self.msg_image.get_rect()
         self.msg_image_rect.center = self.rect.center
 
-    def draw_button(self):
+    def draw_button(self, x_pos, y_pos):
         """Display the button"""
+        self.rect.x = x_pos
+        self.rect.y = y_pos
+        self.msg_image_rect.center = self.rect.center
         self.screen.fill(self.button_color, self.rect)
         self.screen.blit(self.msg_image, self.msg_image_rect)
+
+    def is_clicked(self, event):
+        """Check if user clicked the button"""
+        if event.type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(pygame.mouse.get_pos()):
+            return True
+        else:
+            return False
