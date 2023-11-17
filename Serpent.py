@@ -4,7 +4,7 @@ import BodyModule
 
 class Serpent:
     """Class for the snake character"""
-    def __init__(self, screen):
+    def __init__(self, screen, initial_length):
         """Initialize snake sprite in the game"""
         super().__init__()
 
@@ -16,13 +16,14 @@ class Serpent:
         self.black = (0, 0, 0)
 
         # Initial length of snake (in modules)
-        self.initial_length = 3
+        self.initial_length = initial_length
 
         # Size of one body module
         self.size = [10, 10]
 
-        # Store objects forming snake's body
+        # Store objects forming snake's body and first object as head for readability
         self.body = []
+        self.head = None
 
         # Store offsets to new positions
         self.offsets = [(0, 0)] * self.initial_length
@@ -37,18 +38,19 @@ class Serpent:
         # Store current direction
         self.current_direction = "stop"
 
-        # Create initial body
-        # self._create_body()
-
         # Store current and previous last body module's coordinates
         self.last_module_x = [0, 0]
         self.last_module_y = [0, 0]
 
-    def create_body(self):
+        # Create and display body
+        self._create_body()
+
+    def _create_body(self):
         """Create initial body of the snake"""
         # Fill list with body objects
         for i in range(self.initial_length):
             self.body.append(BodyModule.BodyModule(self.screen, self.size))
+        self.head = self.body[0]
 
         # Set position of the starting body objects
         for i in range(len(self.body)):
@@ -92,6 +94,7 @@ class Serpent:
             self.body[i].update(self.offsets[i])
 
     def _update_last_module_position(self):
+        """Function for storing last module position in order to specify its moving direction"""
         self.last_module_x[1] = self.last_module_x[0]
         self.last_module_y[1] = self.last_module_y[0]
         self.last_module_x[0] = self.body[-1].rect.x

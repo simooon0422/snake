@@ -33,5 +33,5 @@ class Fruit(pygame.sprite.Sprite):
         self.rect.y = random.randrange(0 + self.margin, self.screen_height - self.margin, 10)
 
     def update(self):
-        """Place fruit in specified coordinates"""
+        """Place fruit on the screen"""
         self.screen.blit(self.image, self.rect)

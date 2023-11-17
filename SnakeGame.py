@@ -14,7 +14,9 @@ class SnakeGame:
         self.screen = pygame.display.set_mode((500, 500))
         self.screen_width = self.screen.get_width()
         self.screen_height = self.screen.get_height()
-        self.snake = Serpent.Serpent(self.screen)
+
+        self.snake_init_length = 3
+        self.snake = None
         self.direction = "stop"
 
         self.fruits_list = []
@@ -164,13 +166,12 @@ class SnakeGame:
         """Creates the snake and starts the game"""
         self.running_state = 0
         self.screen.fill((0, 0, 0))
-        self.snake.create_body()
+        self.snake = Serpent.Serpent(self.screen, self.snake_init_length)
 
     def _restart(self):
         """Deletes current snake and fruits and creates them once again"""
         del self.snake
         del self.fruits_list[0]
-        self.snake = Serpent.Serpent(self.screen)
         self.direction = "stop"
         self._start()
 
