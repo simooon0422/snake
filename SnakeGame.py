@@ -13,6 +13,8 @@ class SnakeGame:
         pygame.init()
         pygame.display.set_caption("Super Snake")
         self.screen = pygame.display.set_mode((500, 500))
+        self.screen_width = self.screen.get_width()
+        self.screen_height = self.screen.get_height()
         self.snake = Serpent.Serpent(self.screen)
         self.direction = "stop"
 
@@ -49,11 +51,6 @@ class SnakeGame:
 
             time.sleep(0.1)  # delay for snake's movement
 
-    def _run(self):
-        self.snake.update_body(self.direction)
-        self._handle_fruits()
-        self._handle_collisions()
-
     def _handle_events(self):
         """Function to handle pressing keys and clicking"""
         for event in pygame.event.get():
@@ -68,10 +65,16 @@ class SnakeGame:
                     self.direction = "up"
                 elif event.key == pygame.K_DOWN:
                     self.direction = "down"
-                elif event.key == pygame.K_p:
+                elif event.key == pygame.K_p or event.key == pygame.K_ESCAPE:
                     self.running_state = 3
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                self._menu_clicks(pygame.mouse.get_pos())
+                if self.running_state != 0:
+                    self._menu_clicks(pygame.mouse.get_pos())
+
+    def _run(self):
+        self.snake.update_body(self.direction)
+        self._handle_fruits()
+        self._handle_collisions()
 
     def _handle_fruits(self):
         """Function for displaying fruits for snake on the screen"""
@@ -83,36 +86,42 @@ class SnakeGame:
 
     def _handle_collisions(self):
         """Function specifying action after collision of objects"""
-        self._check_fruits_collisions()
-        self._check_game_over_collisions()
+        self._handle_fruits_collisions()
+        self._handle_game_over_conditions()
+
+    def _handle_fruits_collisions(self):
+        """Function handling collisions with fruits"""
+        index = self._check_fruits_collisions()
+        if index != -1:
+            del self.fruits_list[index]
+            self.fruits_position.pop(index)
+            self.snake.grow()
+            self.snake.grow()
+            self.snake.grow()
+            self.snake.grow()
+            self.snake.grow()
+            print("Eat apple")
 
     def _check_fruits_collisions(self):
-        """Function handling collisions with fruits"""
+        """Function checking if head collides with any fruit"""
         for i in range(len(self.fruits_list)):
-            if pygame.Rect.colliderect(self.snake.body[0].rect, self.fruits_list[0].rect):
-                del self.fruits_list[i]
-                self.fruits_position.pop(i)
-                self.snake.grow()
-                self.snake.grow()
-                self.snake.grow()
-                self.snake.grow()
-                self.snake.grow()
-                print("Eat apple")
+            if pygame.Rect.colliderect(self.snake.body[0].rect, self.fruits_list[i].rect):
+                return i
+        return -1
+
+    def _handle_game_over_conditions(self):
+        """Function handling collisions causing game over"""
+        if self._check_game_over_collisions():
+            self.running_state = 2
 
     def _check_game_over_collisions(self):
-        """Function handling collisions causing game over"""
-        if self._is_game_over():
-            self.running_state = 2
-            print("Game Over")
-
-    def _is_game_over(self):
         """Function checking game over conditions"""
         for i in range(1, len(self.snake.body)):
             if pygame.Rect.colliderect(self.snake.body[0].rect, self.snake.body[i].rect):
                 return True
-        if self.snake.body[0].rect.x > 500 - self.snake.size[0] or self.snake.body[0].rect.x < 0:
+        if self.snake.body[0].rect.x > self.screen_width - self.snake.size[0] or self.snake.body[0].rect.x < 0:
             return True
-        elif self.snake.body[0].rect.y > 500 - self.snake.size[1] or self.snake.body[0].rect.y < 0:
+        elif self.snake.body[0].rect.y > self.screen_height - self.snake.size[1] or self.snake.body[0].rect.y < 0:
             return True
         else:
             return False
@@ -165,11 +174,9 @@ class SnakeGame:
         del self.snake
         del self.fruits_list[0]
         self.fruits_position.pop(0)
-        self.running_state = 0
-        self.screen.fill((0, 0, 0))
         self.snake = Serpent.Serpent(self.screen)
         self.direction = "stop"
-        self.snake.create_body()
+        self._start()
 
     def _resume(self):
         """Resume game from pause"""
