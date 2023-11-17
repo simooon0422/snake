@@ -3,14 +3,14 @@ import pygame.font
 
 class Label:
     """Class for creating and displaying labels with text"""
-    def __init__(self, screen, msg, width, height):
+    def __init__(self, screen, msg, width, height, color):
         """Initialization of label's attributes"""
         self.screen = screen
         self.screen_rect = self.screen.get_rect()
 
         # Size and properties of the button
         self.width, self.height = width, height
-        self.color = (0, 255, 0)
+        self.color = color
         self.text_color = (255, 255, 255)
         self.font = pygame.font.SysFont(None, 48)
 

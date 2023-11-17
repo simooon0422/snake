@@ -12,25 +12,35 @@ class SnakeGame:
         """Initialize the game"""
         pygame.init()
         pygame.display.set_caption("Super Snake")
+
+        # Display parameters
         self.screen = pygame.display.set_mode((500, 500))
         self.screen_width = self.screen.get_width()
         self.screen_height = self.screen.get_height()
 
+        # Initial snake attributes (snake object initialized in _start() function)
         self.snake_init_length = 3
         self.snake = None
         self.direction = "stop"
 
+        # Store fruits objects
         self.fruits_list = []
 
+        # State of the game (running game or menus)
         self.running_state = 1
 
+        # Colors
+        self.red = (255, 0, 0)
+        self.purple = (128, 0, 128)
+        self.orange = (255, 165, 0)
+
         # Create button objects used in menus
-        self.play_button = Button.Button(self.screen, "Play", 100, 50)
-        self.quit_button = Button.Button(self.screen, "Quit", 100, 50)
-        self.game_over_label = Label.Label(self.screen, "Game Over", 100, 50)
-        self.restart_button = Button.Button(self.screen, "Restart", 100, 50)
-        self.pause_label = Label.Label(self.screen, "Pause", 100, 50)
-        self.resume_button = Button.Button(self.screen, "Resume", 100, 50)
+        self.play_button = Button.Button(self.screen, "Play", 150, 50, self.purple)
+        self.quit_button = Button.Button(self.screen, "Quit", 100, 50, self.purple)
+        self.game_over_label = Label.Label(self.screen, "Game Over", 200, 50, self.red)
+        self.restart_button = Button.Button(self.screen, "Restart", 150, 50, self.purple)
+        self.pause_label = Label.Label(self.screen, "Paused", 200, 50, self.orange)
+        self.resume_button = Button.Button(self.screen, "Resume", 150, 50, self.purple)
 
     def run_game(self):
         """Main game loop, Running states of the game:
@@ -73,6 +83,7 @@ class SnakeGame:
                     self._menu_clicks(event)
 
     def _run(self):
+        """Executes functions to play the game"""
         self.snake.update_body(self.direction)
         self._handle_fruits()
         self._handle_collisions()
@@ -130,14 +141,14 @@ class SnakeGame:
         """Displays menus of the game"""
         self._hide_buttons()
         if menu_type == "main":
-            self.play_button.draw(200, 150)
+            self.play_button.draw(175, 200)
         elif menu_type == "game over":
-            self.game_over_label.draw(200, 150)
-            self.restart_button.draw(200, 250)
+            self.game_over_label.draw(150, 100)
+            self.restart_button.draw(175, 250)
         elif menu_type == "pause":
-            self.pause_label.draw(200, 100)
-            self.resume_button.draw(200, 150)
-            self.restart_button.draw(200, 250)
+            self.pause_label.draw(150, 100)
+            self.resume_button.draw(175, 200)
+            self.restart_button.draw(175, 275)
 
         self.quit_button.draw(200, 350)
 
