@@ -1,6 +1,7 @@
 import pygame
 import Serpent
 import Fruit
+import Label
 import Button
 import time
 
@@ -26,9 +27,9 @@ class SnakeGame:
         # Create button objects used in menus
         self.play_button = Button.Button(self.screen, "Play", 100, 50)
         self.quit_button = Button.Button(self.screen, "Quit", 100, 50)
-        self.game_over_label = Button.Button(self.screen, "Game Over", 100, 50)
+        self.game_over_label = Label.Label(self.screen, "Game Over", 100, 50)
         self.restart_button = Button.Button(self.screen, "Restart", 100, 50)
-        self.pause_label = Button.Button(self.screen, "Pause", 100, 50)
+        self.pause_label = Label.Label(self.screen, "Pause", 100, 50)
         self.resume_button = Button.Button(self.screen, "Resume", 100, 50)
 
     def run_game(self):
@@ -129,25 +130,25 @@ class SnakeGame:
         """Displays menus of the game"""
         self._hide_buttons()
         if menu_type == "main":
-            self.play_button.draw_button(200, 150)
+            self.play_button.draw(200, 150)
         elif menu_type == "game over":
-            self.game_over_label.draw_button(200, 150)
-            self.restart_button.draw_button(200, 250)
+            self.game_over_label.draw(200, 150)
+            self.restart_button.draw(200, 250)
         elif menu_type == "pause":
-            self.pause_label.draw_button(200, 100)
-            self.resume_button.draw_button(200, 150)
-            self.restart_button.draw_button(200, 250)
+            self.pause_label.draw(200, 100)
+            self.resume_button.draw(200, 150)
+            self.restart_button.draw(200, 250)
 
-        self.quit_button.draw_button(200, 350)
+        self.quit_button.draw(200, 350)
 
     def _hide_buttons(self):
         """Hide buttons outside the screen to prevent overlapping on menu change"""
         hide_x = -500
         hide_y = -500
-        self.play_button.draw_button(hide_x, hide_y)
-        self.restart_button.draw_button(hide_x, hide_y)
-        self.resume_button.draw_button(hide_x, hide_y)
-        self.quit_button.draw_button(hide_x, hide_y)
+        self.play_button.draw(hide_x, hide_y)
+        self.restart_button.draw(hide_x, hide_y)
+        self.resume_button.draw(hide_x, hide_y)
+        self.quit_button.draw(hide_x, hide_y)
 
     def _menu_clicks(self, event):
         """Handle clicking on menu buttons"""
