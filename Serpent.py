@@ -57,7 +57,7 @@ class Serpent:
             if i == 0:
                 # Set position of the first body part (head)
                 self.body[0].rect.x = self.screen_width / 2
-                self.body[0].rect.y = self.screen_height / 2
+                self.body[0].rect.y = (self.screen_height - 50) / 2
             else:
                 self.body[i].rect.x = self.body[i-1].rect.x
                 self.body[i].rect.y = self.body[i-1].rect.y + self.size[1]
@@ -73,11 +73,10 @@ class Serpent:
         if command != "stop":
             if command != self._get_opposite_direction(self.current_direction):
                 self.current_direction = command
-
-            self.screen.fill(self.black)
             self._set_offsets(self.current_direction)
-            self._update_positions()
-            self._update_last_module_position()
+
+        self._update_positions()
+        self._update_last_module_position()
 
     def _set_offsets(self, command):
         """Set offsets for body modules"""
@@ -135,3 +134,5 @@ class Serpent:
             return self.directions["right"]
         elif x > 0 and y == 0:
             return self.directions["left"]
+        else:
+            return self.directions["stop"]

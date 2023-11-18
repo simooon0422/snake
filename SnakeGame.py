@@ -14,9 +14,16 @@ class SnakeGame:
         pygame.display.set_caption("Super Snake")
 
         # Display parameters
-        self.screen = pygame.display.set_mode((500, 500))
+        self.screen = pygame.display.set_mode((500, 550))
         self.screen_width = self.screen.get_width()
         self.screen_height = self.screen.get_height()
+
+        # Colors
+        self.red = (255, 0, 0)
+        self.purple = (128, 0, 128)
+        self.orange = (255, 165, 0)
+        self.black = (0, 0, 0)
+        self.gold = (255, 215, 0)
 
         # Initial snake attributes (snake object initialized in _start() function)
         self.snake_init_length = 3
@@ -29,10 +36,10 @@ class SnakeGame:
         # State of the game (running game or menus)
         self.running_state = 1
 
-        # Colors
-        self.red = (255, 0, 0)
-        self.purple = (128, 0, 128)
-        self.orange = (255, 165, 0)
+        # Score counter
+        self.score = 0
+        self.score_message = f"Score: {self.score}"
+        self.score_label = Label.Label(self.screen, self.score_message, self.screen_width, 50, self.gold)
 
         # Create button objects used in menus
         self.play_button = Button.Button(self.screen, "Play", 150, 50, self.purple)
@@ -84,6 +91,8 @@ class SnakeGame:
 
     def _run(self):
         """Executes functions to play the game"""
+        self.screen.fill(self.black)
+        self.score_label.draw(0, 0)
         self.snake.update_body(self.direction)
         self._handle_fruits()
         self._handle_collisions()
@@ -106,19 +115,26 @@ class SnakeGame:
         index = self._check_fruits_collisions()
         if index != -1:
             del self.fruits_list[index]
+            self._increase_score()
             self.snake.grow()
-            self.snake.grow()
-            self.snake.grow()
-            self.snake.grow()
-            self.snake.grow()
-            print("Eat apple")
 
     def _check_fruits_collisions(self):
         """Function checking if head collides with any fruit"""
         for i in range(len(self.fruits_list)):
-            if pygame.Rect.colliderect(self.snake.body[0].rect, self.fruits_list[i].rect):
+            if pygame.Rect.colliderect(self.snake.head.rect, self.fruits_list[i].rect):
                 return i
         return -1
+
+    def _increase_score(self):
+        """Increase score counter and update text of label"""
+        self.score += 1
+        self.score_message = self.score_message = f"Score: {self.score}"
+        self.score_label._prep_msg(self.score_message)
+
+    def _reset_score(self):
+        self.score = 0
+        self.score_message = self.score_message = f"Score: {self.score}"
+        self.score_label._prep_msg(self.score_message)
 
     def _handle_game_over_conditions(self):
         """Function handling collisions causing game over"""
@@ -128,11 +144,11 @@ class SnakeGame:
     def _check_game_over_collisions(self):
         """Function checking game over conditions"""
         for i in range(1, len(self.snake.body)):
-            if pygame.Rect.colliderect(self.snake.body[0].rect, self.snake.body[i].rect):
+            if pygame.Rect.colliderect(self.snake.head.rect, self.snake.body[i].rect):
                 return True
-        if self.snake.body[0].rect.x > self.screen_width - self.snake.size[0] or self.snake.body[0].rect.x < 0:
+        if self.snake.head.rect.x > self.screen_width - self.snake.size[0] or self.snake.head.rect.x < 0:
             return True
-        elif self.snake.body[0].rect.y > self.screen_height - self.snake.size[1] or self.snake.body[0].rect.y < 0:
+        elif self.snake.head.rect.y > self.screen_height - self.snake.size[1] or self.snake.head.rect.y < 50:
             return True
         else:
             return False
@@ -175,13 +191,15 @@ class SnakeGame:
     def _start(self):
         """Creates the snake and starts the game"""
         self.running_state = 0
-        self.screen.fill((0, 0, 0))
+        self.screen.fill(self.black)
         self.snake = Serpent.Serpent(self.screen, self.snake_init_length)
 
     def _restart(self):
         """Deletes current snake and fruits and creates them once again"""
         del self.snake
-        del self.fruits_list[0]
+        for i in range(len(self.fruits_list)):
+            del self.fruits_list[i]
+        self._reset_score()
         self.direction = "stop"
         self._start()
 
